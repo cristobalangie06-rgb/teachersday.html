@@ -1,1 +1,543 @@
-# teachersday.html
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teachers' Day Letter - Sir Randy Bello</title>
+
+  <style>
+    :root {
+      --bg: #fff0f5;
+      --bg-secondary: #ffe0eb;
+      --card: rgba(255, 255, 255, 0.82);
+      --text: #54243c;
+      --muted: #825568;
+      --pink: #df6f9d;
+      --pink-dark: #b94c79;
+      --gold: #d9a441;
+      --envelope: #f6a8c5;
+      --envelope-dark: #dc779d;
+      --shadow: rgba(150, 65, 105, 0.2);
+    }
+
+    body.dark {
+      --bg: #211622;
+      --bg-secondary: #352032;
+      --card: rgba(48, 29, 45, 0.92);
+      --text: #ffe7f0;
+      --muted: #d4a5b8;
+      --pink: #ec8db2;
+      --pink-dark: #c96993;
+      --gold: #efc66d;
+      --envelope: #9e5277;
+      --envelope-dark: #713653;
+      --shadow: rgba(0, 0, 0, 0.42);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 28px 16px;
+      overflow-x: hidden;
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,.75), transparent 22%),
+        radial-gradient(circle at 80% 10%, rgba(255,255,255,.55), transparent 18%),
+        linear-gradient(135deg, var(--bg), var(--bg-secondary));
+      transition: background .6s ease, color .6s ease;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      z-index: -1;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      filter: blur(40px);
+      opacity: .35;
+      pointer-events: none;
+    }
+
+    body::before {
+      top: -80px;
+      left: -80px;
+      background: #f3a8c5;
+    }
+
+    body::after {
+      right: -80px;
+      bottom: -80px;
+      background: #f1c973;
+    }
+
+    .page {
+      position: relative;
+      width: min(760px, 100%);
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 18px;
+    }
+
+    .theme-toggle {
+      border: 1px solid rgba(217, 164, 65, .5);
+      border-radius: 999px;
+      padding: 10px 16px;
+      color: var(--text);
+      background: var(--card);
+      box-shadow: 0 8px 24px var(--shadow);
+      cursor: pointer;
+      font: inherit;
+      transition: transform .25s ease, background .5s ease;
+    }
+
+    .theme-toggle:hover {
+      transform: translateY(-2px);
+    }
+
+    .theme-toggle:focus-visible,
+    button:focus-visible {
+      outline: 3px solid var(--gold);
+      outline-offset: 4px;
+    }
+
+    .stage {
+      position: relative;
+      min-height: 560px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .sparkles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .sparkle {
+      position: absolute;
+      color: var(--gold);
+      font-size: 18px;
+      opacity: 0;
+      animation: sparkleFloat 3.8s ease-in-out infinite;
+      text-shadow: 0 0 12px rgba(239, 198, 109, .9);
+    }
+
+    .sparkle:nth-child(1) { left: 8%; top: 14%; animation-delay: .2s; }
+    .sparkle:nth-child(2) { left: 20%; top: 72%; animation-delay: 1.1s; }
+    .sparkle:nth-child(3) { right: 12%; top: 20%; animation-delay: 1.8s; }
+    .sparkle:nth-child(4) { right: 20%; bottom: 14%; animation-delay: 2.3s; }
+    .sparkle:nth-child(5) { left: 48%; top: 5%; animation-delay: 2.8s; }
+    .sparkle:nth-child(6) { right: 42%; bottom: 5%; animation-delay: 3.2s; }
+
+    .envelope-area {
+      position: relative;
+      width: min(500px, 92vw);
+      perspective: 1200px;
+      transition: opacity .6s ease, transform .6s ease;
+    }
+
+    .envelope-area.opened {
+      opacity: 0;
+      transform: scale(.85) translateY(25px);
+      pointer-events: none;
+    }
+
+    .envelope {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1.55 / 1;
+      border-radius: 12px;
+      background: var(--envelope);
+      box-shadow: 0 25px 50px var(--shadow);
+      overflow: visible;
+    }
+
+    .envelope::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      clip-path: polygon(0 0, 50% 58%, 100% 0, 100% 100%, 0 100%);
+      background: var(--envelope-dark);
+      opacity: .7;
+    }
+
+    .flap {
+      position: absolute;
+      z-index: 3;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 62%;
+      transform-origin: top center;
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      background: linear-gradient(145deg, var(--envelope), var(--envelope-dark));
+      transition: transform 1s cubic-bezier(.65, 0, .2, 1);
+    }
+
+    .seal {
+      position: absolute;
+      z-index: 5;
+      left: 50%;
+      top: 52%;
+      transform: translate(-50%, -50%);
+      width: 66px;
+      height: 66px;
+      display: grid;
+      place-items: center;
+      border: 3px solid rgba(255,255,255,.7);
+      border-radius: 50%;
+      color: white;
+      background: #bc527d;
+      box-shadow: 0 5px 18px rgba(95, 31, 59, .28);
+      font-size: 27px;
+      transition: opacity .4s ease, transform .4s ease;
+    }
+
+    .envelope-area.opened .flap {
+      transform: rotateX(180deg);
+    }
+
+    .envelope-area.opened .seal {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(.3);
+    }
+
+    .envelope-label {
+      position: absolute;
+      z-index: 4;
+      left: 50%;
+      bottom: 24px;
+      transform: translateX(-50%);
+      width: 100%;
+      text-align: center;
+      color: white;
+      font-size: clamp(18px, 4vw, 26px);
+      letter-spacing: .04em;
+      text-shadow: 0 2px 5px rgba(90, 25, 56, .35);
+    }
+
+    .open-button {
+      display: block;
+      margin: 30px auto 0;
+      border: 0;
+      border-radius: 999px;
+      padding: 14px 25px;
+      color: white;
+      background: linear-gradient(135deg, var(--pink), var(--pink-dark));
+      box-shadow: 0 12px 25px var(--shadow);
+      cursor: pointer;
+      font: inherit;
+      font-size: 17px;
+      transition: transform .25s ease, box-shadow .25s ease;
+    }
+
+    .open-button:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 16px 30px var(--shadow);
+    }
+
+    .letter {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+      opacity: 0;
+      transform: translateY(35px) scale(.92);
+      pointer-events: none;
+      transition:
+        opacity .9s ease 1s,
+        transform .9s cubic-bezier(.2, .8, .2, 1) 1s;
+    }
+
+    .letter.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .letter-card {
+      position: relative;
+      width: min(650px, 100%);
+      padding: clamp(28px, 6vw, 58px);
+      border: 1px solid rgba(217, 164, 65, .4);
+      border-radius: 24px;
+      background: var(--card);
+      box-shadow: 0 24px 70px var(--shadow);
+      backdrop-filter: blur(16px);
+      transition: background .6s ease, color .6s ease;
+    }
+
+    .letter-card::before,
+    .letter-card::after {
+      position: absolute;
+      color: var(--gold);
+      font-size: 32px;
+      opacity: .85;
+    }
+
+    .letter-card::before {
+      content: "✦";
+      top: 16px;
+      left: 22px;
+    }
+
+    .letter-card::after {
+      content: "✧";
+      right: 22px;
+      bottom: 16px;
+    }
+
+    .eyebrow {
+      margin-bottom: 12px;
+      color: var(--pink-dark);
+      font-size: 14px;
+      font-family: Arial, sans-serif;
+      font-weight: bold;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin-bottom: 24px;
+      color: var(--text);
+      font-size: clamp(30px, 6vw, 52px);
+      line-height: 1.05;
+    }
+
+    .greeting {
+      margin-bottom: 20px;
+      font-size: 23px;
+      font-weight: bold;
+    }
+
+    p {
+      margin-bottom: 17px;
+      color: var(--muted);
+      font-size: clamp(16px, 2.4vw, 19px);
+      line-height: 1.8;
+    }
+
+    .highlight {
+      color: var(--pink-dark);
+      font-weight: bold;
+    }
+
+    .signature {
+      margin-top: 30px;
+      padding-top: 22px;
+      border-top: 1px solid rgba(217, 164, 65, .4);
+      color: var(--text);
+      font-size: 19px;
+      line-height: 1.7;
+    }
+
+    .signature strong {
+      color: var(--pink-dark);
+      font-size: 24px;
+    }
+
+    .footer-note {
+      margin-top: 30px;
+      text-align: center;
+      color: var(--muted);
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+    }
+
+    @keyframes sparkleFloat {
+      0%, 100% {
+        opacity: 0;
+        transform: translateY(14px) scale(.6) rotate(0deg);
+      }
+      35%, 65% {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotate(90deg);
+      }
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 18px 12px;
+      }
+
+      .stage {
+        min-height: 530px;
+      }
+
+      .letter-card {
+        padding: 32px 23px;
+      }
+
+      .greeting {
+        font-size: 20px;
+      }
+
+      p {
+        line-height: 1.65;
+      }
+
+      .seal {
+        width: 56px;
+        height: 56px;
+        font-size: 23px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <div class="topbar">
+      <button
+        class="theme-toggle"
+        id="themeToggle"
+        type="button"
+        aria-label="Switch to dark mode"
+        aria-pressed="false">
+        🌙 Dark Mode
+      </button>
+    </div>
+
+    <section class="stage" aria-label="Teachers' Day appreciation letter">
+      <div class="sparkles" aria-hidden="true">
+        <span class="sparkle">✦</span>
+        <span class="sparkle">✧</span>
+        <span class="sparkle">✦</span>
+        <span class="sparkle">✧</span>
+        <span class="sparkle">✦</span>
+        <span class="sparkle">✧</span>
+      </div>
+
+      <div class="envelope-area" id="envelopeArea">
+        <div class="envelope" aria-hidden="true">
+          <div class="flap"></div>
+          <div class="seal">♥</div>
+          <div class="envelope-label">A Letter of Gratitude</div>
+        </div>
+
+        <button class="open-button" id="openButton" type="button">
+          Open Letter
+        </button>
+      </div>
+
+      <article class="letter" id="letter" aria-hidden="true">
+        <div class="letter-card">
+          <div class="eyebrow">Happy Teachers' Day</div>
+
+          <h1>Thank You, Sir Randy</h1>
+
+          <div class="greeting">Dear Sir Randy Bello,</div>
+
+          <p>
+            On this special Teachers' Day, I want to express my heartfelt
+            gratitude for being such an inspiring and dedicated web development
+            instructor.
+          </p>
+
+          <p>
+            Thank you for guiding us through the exciting world of
+            <span class="highlight">HTML, CSS, and JavaScript</span>.
+            Your lessons have helped us understand not only how to build
+            websites, but also how to think creatively and solve problems.
+          </p>
+
+          <p>
+            Your patience, encouragement, and willingness to help have made
+            learning easier and more meaningful. Because of your support, we
+            feel more confident exploring code and creating things of our own.
+          </p>
+
+          <p>
+            Thank you for sharing your knowledge, believing in your students,
+            and inspiring us to keep improving. Your impact reaches far beyond
+            the classroom, and we truly appreciate everything you do.
+          </p>
+
+          <div class="signature">
+            With gratitude,<br />
+            <strong>Your student</strong>
+          </div>
+
+          <div class="footer-note">
+            Wishing you a wonderful and meaningful Teachers' Day ✨
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    const body = document.body;
+    const themeToggle = document.getElementById("themeToggle");
+    const openButton = document.getElementById("openButton");
+    const envelopeArea = document.getElementById("envelopeArea");
+    const letter = document.getElementById("letter");
+
+    function updateThemeButton() {
+      const darkMode = body.classList.contains("dark");
+
+      themeToggle.textContent = darkMode
+        ? "☀️ Light Mode"
+        : "🌙 Dark Mode";
+
+      themeToggle.setAttribute("aria-pressed", darkMode);
+      themeToggle.setAttribute(
+        "aria-label",
+        darkMode ? "Switch to light mode" : "Switch to dark mode"
+      );
+    }
+
+    themeToggle.addEventListener("click", () => {
+      body.classList.toggle("dark");
+      updateThemeButton();
+    });
+
+    openButton.addEventListener("click", () => {
+      envelopeArea.classList.add("opened");
+
+      setTimeout(() => {
+        letter.classList.add("visible");
+        letter.setAttribute("aria-hidden", "false");
+      }, 100);
+    });
+
+    updateThemeButton();
+  </script>
+</body>
+</html>
+
+
+Canva# teachersday.html
